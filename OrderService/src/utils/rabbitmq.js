@@ -2,36 +2,36 @@ const {insertOrder} = require("../services/order.service")
 
 const amqp = require('amqplib');
 const exchange = "exchange"
-async function Rabbitconnect() {
+async function Rabbitconnect(queueName) {
+    // connecting to the server
     const amqpServer = 'amqp://localhost';
     const connection = await amqp.connect(amqpServer);
+
+    // creating channel
     channel = await connection.createChannel();
-    channel.assertQueue("Buy_Product", { durable: false });
+
+    // creating queue
+    channel.assertQueue(queueName, { durable: false });
     channel.prefetch(1);
-    channel.bindQueue("Buy_Product", exchange);
+    channel.bindQueue(queueName, exchange);
     console.log('Awaiting requests');
 
+    // reading data from queue
      channel.consume(
-        "Buy_Product",
+         queueName,
         msg => {
 
             if (!msg) {
                 throw "Error in msg format";
             }
-
-            // console.log("message",msg)
             let somedata = JSON.parse(msg?.content.toString())
-            // console.log("somedata",somedata)
-            // console.log(msg)
-            // let data = JSON.parse(msg?.content.toString());
-           
-            let datainserted= insertOrder(somedata);
 
+            // inserting received data to the db
+            let datainserted= insertOrder(somedata);
+            
+            // sending response back 
             datainserted.then((dat)=>{
-                console.log(dat)
-                channel.sendToQueue(msg?.properties.replyTo, Buffer.from(JSON.stringify(dat)), {
-                    // correlationId: msg?.properties.correlationId,
-                });
+                channel.sendToQueue(msg?.properties.replyTo, Buffer.from(JSON.stringify(dat)));
             }
             )
             
@@ -39,9 +39,6 @@ async function Rabbitconnect() {
 
         }
     );
-
-
-
 }
 
 

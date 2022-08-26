@@ -32,7 +32,7 @@ const buyProduct = async(req,res)=>{
     try {
         const product = await getSingleProduct(req.params.id);
         let defaultUser = "ankushgupta41097";
-        await rabbitConnection({product,defaultUser})
+        await rabbitConnection("Buy_Product",{product,defaultUser})
         console.log("send it")
         return res.status(200).send({product,"buyer" :defaultUser })
         

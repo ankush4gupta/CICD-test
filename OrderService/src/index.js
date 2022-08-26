@@ -1,7 +1,7 @@
 const express = require("express");
 const orderRoute = require("./routes/order.route")
 const Rabbitconnect = require("./utils/rabbitmq");
-Rabbitconnect()
+Rabbitconnect("Buy_Product")
 //Initialise server variable
 const app = express();
 

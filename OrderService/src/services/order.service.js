@@ -10,13 +10,12 @@ const extractOrders = async () => {
 //  insert orders into db
 
 const insertOrder =  async (data)=>{
-    console.log("dataget",data);
+    // console.log("dataget",data);
     let obj = {
-        productDetail : data.product,
+        productDetail: data.product,
         buyer : data.defaultUser
     }
-
-
+    console.log(obj)
     const order = await orderSchema.create(obj);
     return order
 }
