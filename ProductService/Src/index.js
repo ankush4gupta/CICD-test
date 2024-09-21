@@ -1,5 +1,7 @@
 const express = require("express");
 const productRoutes = require("./routes/productRouter")
+const {Rabbit} = require("./utils/rabbitmq")
+Rabbit.connection()
 //Initialise server variable
 const app = express();
 

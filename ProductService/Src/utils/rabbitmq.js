@@ -4,6 +4,11 @@ const crypto = require('crypto');
 let channel;
 const exchange = "exchange"
 
+
+
+
+
+
 async function Rabbitconnect(queueName,msg) {
 
     const amqpServer = 'amqp://localhost';
@@ -43,5 +48,5 @@ async function Rabbitconnect(queueName,msg) {
 }
 
 
-module.exports = Rabbitconnect
+module.exports = { Rabbitconnect, Rabbit }
 
